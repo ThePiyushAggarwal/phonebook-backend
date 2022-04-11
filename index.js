@@ -2,9 +2,18 @@ const express = require('express')
 const { reset } = require('nodemon')
 const app = express()
 const data = require('./db.json')
+const morgan = require('morgan')
 
 //json-parser
 app.use(express.json())
+
+//morgan bitch
+morgan.token('type', (request) => {
+  return JSON.stringify(request.body)
+})
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :type')
+)
 
 // root
 app.get('/', (request, response) => {
