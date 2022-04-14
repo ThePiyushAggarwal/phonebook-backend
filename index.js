@@ -91,7 +91,5 @@ app.post('/api/persons', (request, response) => {
   }
 })
 
-const PORT = 5000
-app.listen(process.env.PORT || PORT, () =>
-  console.log('Server running fine bitch')
-)
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => console.log('Server running fine bitch'))
