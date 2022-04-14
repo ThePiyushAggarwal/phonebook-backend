@@ -1,5 +1,4 @@
 const express = require('express')
-const { reset } = require('nodemon')
 const app = express()
 const data = require('./db.json')
 const morgan = require('morgan')
