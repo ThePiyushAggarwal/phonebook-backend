@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const data = require('./db.json')
 const morgan = require('morgan')
+const cors = require('cors')
+
+app.use(cors())
 
 //json-parser
 app.use(express.json())
