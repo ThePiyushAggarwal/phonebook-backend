@@ -9,6 +9,8 @@ app.use(cors())
 //json-parser
 app.use(express.json())
 
+app.use(express.static('./build'))
+
 //morgan bitch
 morgan.token('type', (request) => {
   return JSON.stringify(request.body)
@@ -94,4 +96,4 @@ app.post('/api/persons', (request, response) => {
 })
 
 const PORT = process.env.PORT || 5000
-app.listen(PORT, () => console.log('Server running fine bitch'))
+app.listen(PORT, () => console.log(`Server running fine bitch at ${PORT} `))

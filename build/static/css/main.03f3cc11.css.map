@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.03f3cc11.css","mappings":"AAAA,GACE,WACF,CAEA,OACE,sBAAuB,CACvB,cAAe,CACf,kBACF","sources":["index.css"],"sourcesContent":["h1 {\r\n  color: green;\r\n}\r\n\r\n.error {\r\n  border: 3px solid green;\r\n  font-size: 20px;\r\n  margin-bottom: 10px;\r\n}\r\n"],"names":[],"sourceRoot":""}
