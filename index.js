@@ -1,8 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
-const data = require('./db.json')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/phonebookModel')
 
 app.use(cors())
 
@@ -19,14 +20,9 @@ app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :type')
 )
 
-// root
-app.get('/', (request, response) => {
-  response.send('<h1>Phonebook Backend</h1>')
-})
-
 // GET all
 app.get('/api/persons', (request, response) => {
-  response.json(data)
+  Person.find({}).then((persons) => response.json(persons))
 })
 
 // info
@@ -39,28 +35,11 @@ app.get('/info', (request, response) => {
   response.send(``)
 })
 
-// GET particular
-app.get('/api/persons/:id', (request, response) => {
-  const id = +request.params.id
-  const thePerson = data.persons.find((person) => person.id === id)
-
-  if (thePerson) {
-    response.json(thePerson)
-  } else {
-    response.status(404).send('Person not found...')
-  }
-})
-
 // DELETE
 app.delete('/api/persons/:id', (request, response) => {
-  const id = +request.params.id
-  const found = data.persons.some((person) => person.id === id)
-  if (found) {
-    data.persons = data.persons.filter((person) => person.id !== id)
-    response.send('Person deleted from database')
-  } else {
-    response.send('Person to be deleted not found in the database')
-  }
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => response.status(204).end())
+    .catch((error) => next(error))
 })
 
 // Generate new id for new entries
@@ -94,6 +73,33 @@ app.post('/api/persons', (request, response) => {
     response.send('please enter name as well as phone')
   }
 })
+
+// Update the phone number
+app.put('/api/persons/:id', (request, response) => {
+  const body = request.body
+  console.log(body)
+  const person = {
+    name: body.name,
+    phone: body.phone,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updated) => response.json(updated))
+    .catch((error) => console.log(error))
+})
+
+//Error Handler
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  next(error)
+}
+
+// this has to be the last loaded middleware
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`Server running fine bitch at ${PORT} `))
